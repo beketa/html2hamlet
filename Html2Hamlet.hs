@@ -7,7 +7,6 @@ import Blaze.ByteString.Builder
 import Blaze.ByteString.Builder.Char.Utf8
 import Control.Applicative
 import Control.Monad
-import qualified Data.Ascii as A
 import Data.Char
 import Data.List
 import Data.Maybe
@@ -16,7 +15,7 @@ import qualified Data.ByteString.Char8 as B
 import qualified Data.ByteString.Lazy.Char8 as BL
 import qualified Data.Text as T
 import Network
-import Network.HTTP.Enumerator
+import Network.HTTP.Conduit hiding (def)
 import System.Console.CmdArgs
 import Text.XmlHtml
 import Text.XmlHtml.Cursor
@@ -49,7 +48,7 @@ main = do
       if any (`isPrefixOf` file) ["http://", "https://"]
         then withSocketsDo $ do
         let outfile = httpFileName file
-        con <- simpleHttp $ fromJust $ A.fromChars file
+        con <- simpleHttp file
         let dest = convert file $ B.concat $ BL.toChunks con
         B.length dest `seq` B.writeFile outfile dest
         else do
