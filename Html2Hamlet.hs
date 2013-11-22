@@ -76,7 +76,7 @@ changeSuffix file
 convert :: String -> B.ByteString -> B.ByteString
 convert fname content = toByteString $ cvt $ fromNodes nodes
   where
-    Right (HtmlDocument enc typ nodes) = parseHTML fname content
+    HtmlDocument enc typ nodes = either (error . show) id (parseHTML fname content)
     
     cvt = (fromString "!!!" `mappend`) .
           (`mappend` fromString "\n") .
